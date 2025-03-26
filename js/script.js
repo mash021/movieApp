@@ -181,6 +181,36 @@ const eventHandlers = {
     modal.style.display = "block";
     document.body.style.overflow = "hidden";
     this.setupModalEventListeners(modalContent, movie.id);
+    this.showMovieDetailsInMain(movie);
+  },
+
+  showMovieDetailsInMain(movie) {
+    const detailsContainer = document.querySelector(".movie-details-container");
+    if (detailsContainer) {
+      detailsContainer.style.display = "block";
+      DOM.moviePoster.src = movie.poster_url;
+      DOM.movieTitle.textContent = movie.title;
+      DOM.movieDescription.textContent = movie.description;
+      DOM.movieYear.textContent = movie.movie_year;
+      DOM.movieDirector.textContent = movie.director;
+      DOM.moviePrice.textContent = `$${movie.price}`;
+      DOM.movieActors.textContent = movie.actors.join(", ");
+
+      const savedRating = storageService.getMovieRating(movie.id);
+      if (savedRating) {
+        this.highlightStars(DOM.stars, savedRating);
+        DOM.ratingDisplay.textContent = `Your rating: ${savedRating}/5`;
+      }
+
+      const savedComments = storageService.getMovieComments(movie.id);
+      DOM.commentsList.innerHTML = "";
+      savedComments.forEach((comment) => {
+        const commentElement = document.createElement("div");
+        commentElement.className = "comment";
+        commentElement.textContent = comment;
+        DOM.commentsList.appendChild(commentElement);
+      });
+    }
   },
 
   setupModalEventListeners(modalContent, movieId) {
@@ -216,6 +246,7 @@ const eventHandlers = {
         storageService.saveMovieRating(movieId, rating);
         this.highlightStars(stars, rating);
         ratingDisplay.textContent = `Your rating: ${rating}/5`;
+        this.updateMainRating(movieId, rating);
       });
     });
 
@@ -235,8 +266,28 @@ const eventHandlers = {
         commentsList.insertBefore(commentElement, commentsList.firstChild);
         storageService.saveMovieComment(movieId, commentText);
         commentInput.value = "";
+        this.updateMainComments(movieId, commentText);
       }
     });
+  },
+
+  updateMainRating(movieId, rating) {
+    if (state.currentMovie && state.currentMovie.id === movieId) {
+      this.highlightStars(DOM.stars, rating);
+      DOM.ratingDisplay.textContent = `Your rating: ${rating}/5`;
+    }
+  },
+
+  updateMainComments(movieId, commentText) {
+    if (state.currentMovie && state.currentMovie.id === movieId) {
+      const commentElement = document.createElement("div");
+      commentElement.className = "comment";
+      commentElement.textContent = commentText;
+      DOM.commentsList.insertBefore(
+        commentElement,
+        DOM.commentsList.firstChild
+      );
+    }
   },
 
   highlightStars(stars, rating) {
@@ -350,6 +401,9 @@ class Timer {
     this.selectionTimer = null;
     this.pageTimer = null;
     this.startTime = null;
+    this.timerModal = document.querySelector(".timer-modal");
+    this.closeTimerBtn = document.querySelector(".close-timer");
+    this.timerButton = document.getElementById("timerButton");
     this.initializeTimers();
   }
 
@@ -363,6 +417,23 @@ class Timer {
       "selectionTimerDisplay"
     );
 
+    // Add timer button click event
+    this.timerButton.addEventListener("click", () => {
+      this.showTimerModal();
+    });
+
+    // Add close button event listener
+    this.closeTimerBtn.addEventListener("click", () => {
+      this.hideTimerModal();
+    });
+
+    // Close modal when clicking outside
+    this.timerModal.addEventListener("click", (e) => {
+      if (e.target === this.timerModal) {
+        this.hideTimerModal();
+      }
+    });
+
     startSelectionTimerBtn.addEventListener("click", () => {
       const minutes = parseInt(selectionTimeInput.value) || 5;
       this.startSelectionTimer(minutes);
@@ -370,6 +441,16 @@ class Timer {
 
     // Initialize page time timer
     this.startPageTimer();
+  }
+
+  showTimerModal() {
+    this.timerModal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+
+  hideTimerModal() {
+    this.timerModal.style.display = "none";
+    document.body.style.overflow = "auto";
   }
 
   startSelectionTimer(minutes) {
