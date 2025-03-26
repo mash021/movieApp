@@ -122,3 +122,5 @@ git clone https://github.com/mash021/movieApp.git
   - Implemented pattern matching for search functionality
   - Enhanced input validation using regex patterns
 # movieApp
+[Netlify]url(https://alisharifi-portfolio.com)
+
