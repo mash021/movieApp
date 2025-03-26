@@ -1,0 +1,22 @@
+// DOM Elements Management
+const DOM = {
+  moviePoster: document.getElementById("movie-poster"),
+  movieTitle: document.getElementById("movie-title"),
+  movieDescription: document.getElementById("movie-description"),
+  movieYear: document.getElementById("movie-year"),
+  movieDirector: document.getElementById("movie-director"),
+  moviePrice: document.getElementById("movie-price"),
+  movieActors: document.getElementById("movie-actors"),
+  stars: document.querySelectorAll(".stars i"),
+  ratingDisplay: document.getElementById("rating-display"),
+  commentInput: document.getElementById("comment-input"),
+  submitComment: document.getElementById("submit-comment"),
+  commentsList: document.getElementById("comments-list"),
+  searchInput: document.querySelector("#searchInput"),
+  sortSelect: document.querySelector(".sort-select"),
+  container: document.querySelector(".container"),
+  selectionTimerDisplay: document.getElementById("selectionTimerDisplay"),
+  pageTimeDisplay: document.getElementById("pageTimeDisplay"),
+  startSelectionTimerBtn: document.getElementById("startSelectionTimer"),
+  selectionTimeInput: document.getElementById("selectionTime"),
+};
