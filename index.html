@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie App</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="#" class="nav-brand">
+        <span class="logo-text">M</span>
+        <span class="logo-text">o</span>
+        <span class="logo-text">v</span>
+        <span class="logo-text">i</span>
+        <span class="logo-text">e</span>
+        <span class="logo-text">A</span>
+        <span class="logo-text">p</span>
+        <span class="logo-text">p</span>
+      </a>
+      <div class="nav-links">
+        <a href="#" class="active">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <button id="timerButton" class="timer-button">
+          <i class="fas fa-clock"></i>
+          <span id="timerButtonText">Timer</span>
+        </button>
+        <div class="cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cartCount">0</span>
+      </div>
+    </nav>
+
+    <div class="search-sort-container">
+      <div class="search-wrapper">
+        <span class="search-label">Search</span>
+        <input type="text" id="searchInput" placeholder="Search movies..." />
+      </div>
+      <div class="sort-container">
+        <span class="sort-label">Sort By</span>
+        <select class="sort-select" title="Sort movies by">
+          <option value="">Select...</option>
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="year">Year (Oldest)</option>
+          <option value="year-desc">Year (Newest)</option>
+          <option value="director">Director (A-Z)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="content-divider"></div>
+
+    <main>
+      <div class="container"></div>
+    </main>
+
+    <div class="content-divider"></div>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>About Us</h3>
+          <p>
+            We are passionate about bringing you the best movie collection. Our
+            platform provides a curated selection of films for your
+            entertainment.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <a href="#">Home</a>
+          <a href="#">Movies</a>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h3>Connect With Us</h3>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 MovieApp. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <div class="movie-details-container">
+      <div class="movie-details">
+        <div class="movie-poster">
+          <img id="movie-poster" src="" alt="Movie Poster" />
+        </div>
+        <div class="movie-info">
+          <h2 id="movie-title"></h2>
+          <p id="movie-description"></p>
+          <div class="movie-meta">
+            <p>Year: <span id="movie-year"></span></p>
+            <p>Director: <span id="movie-director"></span></p>
+            <p>Price: <span id="movie-price"></span></p>
+            <p>Actors: <span id="movie-actors"></span></p>
+          </div>
+          <div class="rating-section">
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <div id="rating-display"></div>
+          </div>
+          <div class="comments-section">
+            <textarea
+              id="comment-input"
+              placeholder="Write your comment..."
+            ></textarea>
+            <button id="submit-comment">Submit Comment</button>
+            <div id="comments-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timer-modal">
+      <div class="timer-modal-content">
+        <span class="close-timer">&times;</span>
+        <div class="timer-controls">
+          <input
+            type="number"
+            id="selectionTime"
+            value="5"
+            min="1"
+            max="60"
+            title="Selection time in minutes"
+          />
+          <button id="startSelectionTimer">Start Timer</button>
+        </div>
+        <div class="timer-displays">
+          <div>
+            Selection Timer: <span id="selectionTimerDisplay">00:00</span>
+          </div>
+          <div>Page Time: <span id="pageTimeDisplay">00:00:00</span></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
