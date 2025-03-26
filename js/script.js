@@ -533,6 +533,41 @@ class Timer {
   }
 }
 
+// Load all required JavaScript files
+const scriptFiles = [
+  "js/config.js",
+  "js/dom.js",
+  "js/state.js",
+  "js/storage.js",
+  "js/ui.js",
+  "js/api.js",
+  "js/events.js",
+  "js/timer.js",
+  "js/movieManager.js",
+];
+
+// Function to load scripts sequentially
+function loadScripts() {
+  let currentScript = 0;
+
+  function loadNextScript() {
+    if (currentScript < scriptFiles.length) {
+      const script = document.createElement("script");
+      script.src = scriptFiles[currentScript];
+      script.onload = () => {
+        currentScript++;
+        loadNextScript();
+      };
+      document.head.appendChild(script);
+    } else {
+      // All scripts loaded, initialize the application
+      initializeApp();
+    }
+  }
+
+  loadNextScript();
+}
+
 // Initialize Application
 function initializeApp() {
   uiComponents.createModal();
@@ -553,4 +588,4 @@ function initializeApp() {
 }
 
 // Start loading scripts when DOM is loaded
-document.addEventListener("DOMContentLoaded", initializeApp);
+document.addEventListener("DOMContentLoaded", loadScripts);
