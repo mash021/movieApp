@@ -2,7 +2,13 @@
 const API_URL =
   "https://raw.githubusercontent.com/mash021/mash021.github.io/main/API/data.json";
 const API_KEY = "$2a$10$XOPbrlUPQdwdJUpSrIF6X.LbE14qsMmKGhM1A8W9E9vpo9tXhK6G"; // Read-only API key
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+
+// Function to normalize image URL
+function normalizeImageUrl(url) {
+  if (!url)
+    return "https://via.placeholder.com/600x900?text=No+Image+Available";
+  return url;
+}
 
 // DOM Elements - All UI components we need to interact with
 const DOM = {
@@ -65,8 +71,9 @@ const uiComponents = {
   createMovieCard(movie) {
     const movieCard = document.createElement("div");
     movieCard.classList.add("movie-card");
+    const posterUrl = normalizeImageUrl(movie.poster_url);
     movieCard.innerHTML = `
-      <img src="${movie.poster_url}" alt="${movie.title} Poster" 
+      <img src="${posterUrl}" alt="${movie.title} Poster" 
            onerror="this.src='https://via.placeholder.com/600x900?text=No+Image+Available'" />
       <div class="movie-info">
         <h2>${movie.title}</h2>
@@ -533,41 +540,6 @@ class Timer {
   }
 }
 
-// Load all required JavaScript files
-const scriptFiles = [
-  "js/config.js",
-  "js/dom.js",
-  "js/state.js",
-  "js/storage.js",
-  "js/ui.js",
-  "js/api.js",
-  "js/events.js",
-  "js/timer.js",
-  "js/movieManager.js",
-];
-
-// Function to load scripts sequentially
-function loadScripts() {
-  let currentScript = 0;
-
-  function loadNextScript() {
-    if (currentScript < scriptFiles.length) {
-      const script = document.createElement("script");
-      script.src = scriptFiles[currentScript];
-      script.onload = () => {
-        currentScript++;
-        loadNextScript();
-      };
-      document.head.appendChild(script);
-    } else {
-      // All scripts loaded, initialize the application
-      initializeApp();
-    }
-  }
-
-  loadNextScript();
-}
-
 // Initialize Application
 function initializeApp() {
   uiComponents.createModal();
@@ -587,5 +559,5 @@ function initializeApp() {
   }
 }
 
-// Start loading scripts when DOM is loaded
-document.addEventListener("DOMContentLoaded", loadScripts);
+// Start the app when DOM is loaded
+document.addEventListener("DOMContentLoaded", initializeApp);
