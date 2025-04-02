@@ -369,18 +369,19 @@ const apiService = {
 const movieManager = {
   async initializeMovies() {
     state.movies = await apiService.fetchMovies();
-    this.renderMovies(state.movies);
+    await this.renderMovies(state.movies);
   },
 
-  renderMovies(moviesToRender) {
+  async renderMovies(moviesToRender) {
     DOM.container.innerHTML = "";
     if (moviesToRender.length === 0) {
       DOM.container.innerHTML = '<div class="no-results">No movies found</div>';
       return;
     }
-    moviesToRender.forEach((movie) => {
-      DOM.container.appendChild(uiComponents.createMovieCard(movie));
-    });
+    for (const movie of moviesToRender) {
+      const movieCard = await uiComponents.createMovieCard(movie);
+      DOM.container.appendChild(movieCard);
+    }
     eventHandlers.setupReadMoreListeners();
   },
 
