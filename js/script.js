@@ -27,7 +27,16 @@ const DOM = {
   searchInput: document.querySelector("#searchInput"),
   sortSelect: document.querySelector(".sort-select"),
   container: document.querySelector(".container"),
+  loadingSpinner: document.createElement("div"),
 };
+
+// Add loading spinner to DOM
+DOM.loadingSpinner.className = "loading-spinner";
+DOM.loadingSpinner.innerHTML = `
+  <div class="spinner"></div>
+  <p>Loading movies...</p>
+`;
+document.body.appendChild(DOM.loadingSpinner);
 
 // Application State - Keeps track of all dynamic data
 const state = {
@@ -313,43 +322,52 @@ const eventHandlers = {
 const apiService = {
   async fetchMovies() {
     try {
+      // First check if data exists in localStorage
       const cachedMovies = storageService.getMovies();
       if (cachedMovies.length > 0) {
         return cachedMovies;
       }
 
+      // If data is not in localStorage, fetch from API
       const response = await fetch(API_URL);
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
       const data = await response.json();
       const movies = data.movies;
 
+      // Save the fetched data to localStorage
       storageService.saveMovies(movies);
 
       return movies;
     } catch (error) {
       console.error("Error fetching movies:", error);
+      // In case of error, return cached data
       return storageService.getMovies();
     }
   },
 
   async fetchMovieDetails(movieId) {
     try {
+      // First check if movie exists in localStorage
       const cachedMovies = storageService.getMovies();
       const cachedMovie = cachedMovies.find((movie) => movie.id === movieId);
       if (cachedMovie) {
         return cachedMovie;
       }
 
+      // If movie is not in localStorage, fetch from API
       const response = await fetch(API_URL);
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
       const data = await response.json();
       const movie = data.movies.find((movie) => movie.id === movieId);
 
       if (movie) {
+        // Add the new movie to localStorage
         const movies = storageService.getMovies();
         movies.push(movie);
         storageService.saveMovies(movies);
@@ -358,6 +376,7 @@ const apiService = {
       return movie || null;
     } catch (error) {
       console.error("Error fetching movie details:", error);
+      // In case of error, search for movie in localStorage
       return (
         storageService.getMovies().find((movie) => movie.id === movieId) || null
       );
@@ -368,8 +387,21 @@ const apiService = {
 // Movie Manager - Handles all movie-related operations and UI updates
 const movieManager = {
   async initializeMovies() {
-    state.movies = await apiService.fetchMovies();
-    this.renderMovies(state.movies);
+    try {
+      DOM.loadingSpinner.style.display = "flex";
+      state.movies = await apiService.fetchMovies();
+      this.renderMovies(state.movies);
+    } catch (error) {
+      console.error("Error initializing movies:", error);
+      DOM.container.innerHTML = `
+        <div class="error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          <p>Failed to load movies. Please try again later.</p>
+        </div>
+      `;
+    } finally {
+      DOM.loadingSpinner.style.display = "none";
+    }
   },
 
   renderMovies(moviesToRender) {
