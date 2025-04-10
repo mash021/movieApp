@@ -1,66 +1,87 @@
-# Movie App
+# Movie App - Final Version
 
-A web application for displaying and managing movies with various features.
+A modern web application for displaying and managing movies with various features.
 
-## Main Features
+## Recent Changes and Improvements
 
-- Display movie list with complete details
-- Movie rating system
-- Comment functionality for each movie
-- Movie search capability
-- Sort movies by different criteria
-- Movie selection timer with notifications
-- Data persistence using localStorage
-- Responsive user interface
+### Data Management
+- Removed movie data caching from localStorage
+- Movies are now fetched directly from API
+- Only user interactions (ratings and comments) are stored in localStorage
+- Improved data freshness by always showing latest movie data
 
-## Recent Changes
+### Rating System
+- Fixed rating display in movie cards
+- Added numerical rating display (e.g., "3/5")
+- Improved star rating visualization
+- Ratings are persisted in localStorage
 
-### Project Structure
+### Comments System
+- Comments are stored in localStorage
+- New comments appear at the top of the list
+- Comments are associated with specific movies
 
-- Code separation into different modules for better management
-- Created separate files for each component:
-  - `config.js`: Application configuration
-  - `dom.js`: DOM elements management
-  - `state.js`: Application state management
-  - `storage.js`: Storage management
-  - `ui.js`: UI components
-  - `api.js`: API service
-  - `events.js`: Event handlers
-  - `timer.js`: Timer management
-  - `movieManager.js`: Movie management
+### UI Improvements
+- Clean and modern interface
+- Responsive design
+- Improved movie card layout
+- Better rating visualization
+- Enhanced user interaction feedback
 
-### Performance Improvements
+### Code Structure
+- Improved code organization
+- Better separation of concerns
+- Enhanced error handling
+- Optimized API calls
+- Cleaner code with English comments
 
-- Optimized sequential file loading
-- Improved memory management
-- Enhanced initial load speed
+## Features
 
-### UI Enhancements
+### Movie Display
+- Beautiful movie card layout
+- Display of poster, title, description, year, and director
+- "Read More" button for detailed information
+- Main actors display in modal view
 
-- New logo design
-- Improved movie card display
-- Added new animations
+### Rating and Comments
+- Movie rating capability (1 to 5 stars)
+- Ratings stored in browser's localStorage
+- Comment submission for each movie
+- Display of user comment history
 
-## How to Use
+### Smart Sorting
+- Sort by name (ascending and descending)
+- Sort by year (ascending and descending)
+- Sort by director name
+- Automatic sorting when changing options
 
-1. Clone the project:
+### Search Functionality
+- Real-time search
+- Search by movie title
+- Instant results display
 
-```bash
-git clone https://github.com/mash021/movieApp.git
-```
-
-2. Open `index.html` in your browser
+### Timer Feature
+- Movie selection timer
+- Page time tracking
+- Visual and audio notifications
+- Customizable timer duration
 
 ## Technologies Used
-
 - HTML5
 - CSS3
 - JavaScript (ES6+)
 - Font Awesome
 - Local Storage API
+- Fetch API
+
+## How to Use
+1. Clone the repository
+2. Open `index.html` in your browser
+3. Browse movies, rate them, and add comments
+4. Use the search and sort features to find movies
+5. Try the timer feature for movie selection
 
 ## Developer
-
 - Mohammad Ali Sharifi
 
 ### Movie App

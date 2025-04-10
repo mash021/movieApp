@@ -37,7 +37,7 @@ const state = {
   comments: {},
 };
 
-// Local Storage Service - Handles all browser storage operations
+// Local Storage Service - Handles user ratings and comments
 const storageService = {
   getMovieRating(movieId) {
     return parseInt(localStorage.getItem(`movie-${movieId}-rating`)) || 0;
@@ -56,14 +56,6 @@ const storageService = {
     comments.unshift(comment);
     localStorage.setItem(`movie-${movieId}-comments`, JSON.stringify(comments));
   },
-
-  saveMovies(movies) {
-    localStorage.setItem("movies", JSON.stringify(movies));
-  },
-
-  getMovies() {
-    return JSON.parse(localStorage.getItem("movies")) || [];
-  },
 };
 
 // UI Components - Handles all visual elements and their creation
@@ -72,6 +64,7 @@ const uiComponents = {
     const movieCard = document.createElement("div");
     movieCard.classList.add("movie-card");
     const posterUrl = normalizeImageUrl(movie.poster_url);
+    const rating = storageService.getMovieRating(movie.id);
     movieCard.innerHTML = `
       <img src="${posterUrl}" alt="${movie.title} Poster" 
            onerror="this.src='https://via.placeholder.com/600x900?text=No+Image+Available'" />
@@ -83,9 +76,9 @@ const uiComponents = {
           <p><strong>Director:</strong> ${movie.director}</p>
         </div>
         <div class="movie-rating">
-          <p><strong>Rating:</strong></p>
+          <p><strong>Rating:</strong> ${rating}/5</p>
           <div class="stars-display">
-            ${this.createRatingStars(storageService.getMovieRating(movie.id))}
+            ${this.createRatingStars(rating)}
           </div>
         </div>
         <button class="read-more-btn" data-movie-id="${
@@ -309,58 +302,33 @@ const eventHandlers = {
   },
 };
 
-// API Service - Handles all external data fetching and caching
+// API Service - Handles all external data fetching
 const apiService = {
   async fetchMovies() {
     try {
-      const cachedMovies = storageService.getMovies();
-      if (cachedMovies.length > 0) {
-        return cachedMovies;
-      }
-
       const response = await fetch(API_URL);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      const movies = data.movies;
-
-      storageService.saveMovies(movies);
-
-      return movies;
+      return data.movies;
     } catch (error) {
       console.error("Error fetching movies:", error);
-      return storageService.getMovies();
+      return [];
     }
   },
 
   async fetchMovieDetails(movieId) {
     try {
-      const cachedMovies = storageService.getMovies();
-      const cachedMovie = cachedMovies.find((movie) => movie.id === movieId);
-      if (cachedMovie) {
-        return cachedMovie;
-      }
-
       const response = await fetch(API_URL);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      const movie = data.movies.find((movie) => movie.id === movieId);
-
-      if (movie) {
-        const movies = storageService.getMovies();
-        movies.push(movie);
-        storageService.saveMovies(movies);
-      }
-
-      return movie || null;
+      return data.movies.find((movie) => movie.id === movieId) || null;
     } catch (error) {
       console.error("Error fetching movie details:", error);
-      return (
-        storageService.getMovies().find((movie) => movie.id === movieId) || null
-      );
+      return null;
     }
   },
 };
@@ -395,7 +363,7 @@ const movieManager = {
       name: (a, b) => a.title.localeCompare(b.title),
       "name-desc": (a, b) => b.title.localeCompare(a.title),
       year: (a, b) => a.movie_year - b.movie_year,
-      "year-desc": (a, b) => b.movie_year - a.movie_year,
+      "year-desc": (a, b) => a.movie_year - b.movie_year,
       director: (a, b) => a.director.localeCompare(b.director),
     };
     return [...state.movies].sort(sortOptions[criteria] || (() => 0));
@@ -415,7 +383,6 @@ class Timer {
   }
 
   initializeTimers() {
-    // Initialize movie selection timer
     const startSelectionTimerBtn = document.getElementById(
       "startSelectionTimer"
     );
@@ -424,17 +391,14 @@ class Timer {
       "selectionTimerDisplay"
     );
 
-    // Add timer button click event
     this.timerButton.addEventListener("click", () => {
       this.showTimerModal();
     });
 
-    // Add close button event listener
     this.closeTimerBtn.addEventListener("click", () => {
       this.hideTimerModal();
     });
 
-    // Close modal when clicking outside
     this.timerModal.addEventListener("click", (e) => {
       if (e.target === this.timerModal) {
         this.hideTimerModal();
@@ -446,7 +410,6 @@ class Timer {
       this.startSelectionTimer(minutes);
     });
 
-    // Initialize page time timer
     this.startPageTimer();
   }
 
@@ -461,17 +424,13 @@ class Timer {
   }
 
   startSelectionTimer(minutes) {
-    // Clear existing timer if any
     if (this.selectionTimer) {
       clearInterval(this.selectionTimer);
     }
 
     let timeLeft = minutes * 60;
-
-    // Update display immediately
     this.updateSelectionTimerDisplay(timeLeft);
 
-    // Start countdown
     this.selectionTimer = setInterval(() => {
       timeLeft--;
       this.updateSelectionTimerDisplay(timeLeft);
@@ -511,13 +470,11 @@ class Timer {
   }
 
   handleTimerComplete() {
-    // Play notification sound
     const audio = new Audio(
       "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"
     );
     audio.play();
 
-    // Show notification
     if ("Notification" in window) {
       Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
@@ -529,7 +486,6 @@ class Timer {
       });
     }
 
-    // Visual feedback
     const display = document.getElementById("selectionTimerDisplay");
     display.textContent = "Time's Up!";
     display.style.color = "#ff4444";
