@@ -318,7 +318,7 @@ const eventHandlers = {
   },
 };
 
-// API Service - Handles all external data fetching and caching
+// API Service - Handles all external data fetching
 const apiService = {
   async fetchMovies() {
     try {
