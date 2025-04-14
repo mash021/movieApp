@@ -306,7 +306,7 @@ h6 {
 }
 
 .movie-card {
-  background-color: #ffffff !important;
+  background-color: #ffffff;
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -341,7 +341,7 @@ h6 {
 
 .movie-info {
   padding: 1.5rem;
-  background-color: #ffffff !important;
+  background-color: #ffffff;
   color: var(--primary-dark);
   flex-grow: 1;
   display: flex;
