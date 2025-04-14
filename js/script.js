@@ -164,14 +164,23 @@ const uiComponents = {
 const eventHandlers = {
   setupReadMoreListeners() {
     const modal = document.querySelector(".modal");
-    const modalContent = modal.querySelector(".modal-body");
-    const closeBtn = modal.querySelector(".close-modal");
+    if (!modal) {
+      this.createModal();
+    }
+    const modalContent = document.querySelector(".modal-content .modal-body");
+    const closeBtn = document.querySelector(".close-modal");
 
     document.querySelectorAll(".read-more-btn").forEach((button) => {
       button.addEventListener("click", () => {
         const movieId = parseInt(button.dataset.movieId);
         const movie = state.movies.find((m) => m.id === movieId);
-        if (movie) this.showMovieDetails(modal, modalContent, movie);
+        if (movie) {
+          this.showMovieDetails(
+            document.querySelector(".modal"),
+            modalContent,
+            movie
+          );
+        }
       });
     });
 
@@ -188,6 +197,8 @@ const eventHandlers = {
 
   closeModal(modal) {
     modal.style.display = "none";
+    modal.style.opacity = "0";
+    modal.style.visibility = "hidden";
     document.body.style.overflow = "auto";
   },
 
@@ -195,6 +206,8 @@ const eventHandlers = {
     state.currentMovie = movie;
     modalContent.innerHTML = uiComponents.createMovieDetailsHTML(movie);
     modal.style.display = "block";
+    modal.style.opacity = "1";
+    modal.style.visibility = "visible";
     document.body.style.overflow = "hidden";
     this.setupModalEventListeners(modalContent, movie.id);
     this.showMovieDetailsInMain(movie);
