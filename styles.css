@@ -1239,17 +1239,16 @@ html {
 /* Add Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .movie-card {
-    background: var(--primary-dark);
-    color: var(--text-light);
+    background-color: #ffffff !important;
   }
 
   .movie-info {
-    background: var(--primary-dark);
-    color: var(--text-light);
+    background-color: #ffffff !important;
+    color: var(--primary-dark) !important;
   }
 
   .modal-content {
-    background: var(--primary-dark);
+    background-color: var(--primary-light);
     color: var(--text-light);
   }
 }
